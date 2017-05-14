@@ -68,7 +68,7 @@ namespace Apollo.Core
         /// <summary>
         /// The transform matrix of the <see cref="INode"/> in world space.
         /// </summary>
-        Matrix2D WorldTransform { get; }
+        Matrix2 WorldTransform { get; }
 
         /// <summary>
         /// The graphical <see cref="Microsoft.Xna.Framework.Graphics.BlendState"/> to apply to the node and it's children.

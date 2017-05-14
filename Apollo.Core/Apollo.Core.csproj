@@ -35,7 +35,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="MathUtils.cs" />
-    <Compile Include="Matrix2D.cs" />
+    <Compile Include="Matrix2.cs" />
     <Compile Include="Nodes\Node.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -53,7 +53,7 @@ namespace Apollo.Core
         /// <summary>
         /// The matrix view tranform of the <see cref="Camera"/>.
         /// </summary>
-        public Matrix2D ViewTransform
+        public Matrix2 ViewTransform
         {
             get;
             set;
@@ -139,10 +139,10 @@ namespace Apollo.Core
         public void Update(GameTime gameTime)
         {
             // calculate the view transform
-            ViewTransform = Matrix2D.CreateTranslation(-Position.X, -Position.Y) *
-                            Matrix2D.CreateRotationZ(-MathHelper.ToRadians(Rotation)) *
-                            Matrix2D.CreateScale(Scale, Scale) *
-                            Matrix2D.CreateTranslation(_origin.X, _origin.Y);
+            ViewTransform = Matrix2.CreateTranslation(-Position.X, -Position.Y) *
+                            Matrix2.CreateRotationZ(-MathHelper.ToRadians(Rotation)) *
+                            Matrix2.CreateScale(Scale, Scale) *
+                            Matrix2.CreateTranslation(_origin.X, _origin.Y);
 
             _origin = ScreenCenter / Scale;
 
@@ -188,7 +188,7 @@ namespace Apollo.Core
 
         public Vector2 ScreenToWorld(Vector2 screenPosition)
         {
-            return Vector2.Transform(screenPosition, Matrix2D.Invert(ViewTransform));
+            return Vector2.Transform(screenPosition, Matrix2.Invert(ViewTransform));
         }
     }
 }

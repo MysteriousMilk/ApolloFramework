@@ -122,7 +122,7 @@ namespace Apollo.Core.Nodes
         /// <summary>
         /// The transform matrix of the <see cref="Node"/> in local space.
         /// </summary>
-        public Matrix2D LocalTransform
+        public Matrix2 LocalTransform
         {
             get;
             internal set;
@@ -131,7 +131,7 @@ namespace Apollo.Core.Nodes
         /// <summary>
         /// The transform matrix of the <see cref="Node"/> in world space.
         /// </summary>
-        public Matrix2D WorldTransform
+        public Matrix2 WorldTransform
         {
             get;
             internal set;
@@ -189,8 +189,8 @@ namespace Apollo.Core.Nodes
             Rotation = 0.0f;
             _zorder = 0;
 
-            LocalTransform = Matrix2D.Identity;
-            WorldTransform = Matrix2D.Identity;
+            LocalTransform = Matrix2.Identity;
+            WorldTransform = Matrix2.Identity;
             BlendState = BlendState.AlphaBlend;
 
             Parent = null;
@@ -264,11 +264,11 @@ namespace Apollo.Core.Nodes
             if (Parent != null)
             {
                 // compute local transform for this node
-                LocalTransform = Matrix2D.CreateTranslation(-Parent.Position) *
-                                 Matrix2D.CreateScale(Scale) *
-                                 Matrix2D.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
-                                 Matrix2D.CreateTranslation(Parent.Position) *
-                                 Matrix2D.CreateTranslation(Position);
+                LocalTransform = Matrix2.CreateTranslation(-Parent.Position) *
+                                 Matrix2.CreateScale(Scale) *
+                                 Matrix2.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
+                                 Matrix2.CreateTranslation(Parent.Position) *
+                                 Matrix2.CreateTranslation(Position);
 
                 // compute world transform
                 WorldTransform = Parent.WorldTransform * LocalTransform;
@@ -276,9 +276,9 @@ namespace Apollo.Core.Nodes
             else
             {
                 // compute local transform
-                LocalTransform = Matrix2D.CreateScale(Scale) *
-                                 Matrix2D.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
-                                 Matrix2D.CreateTranslation(Position);
+                LocalTransform = Matrix2.CreateScale(Scale) *
+                                 Matrix2.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
+                                 Matrix2.CreateTranslation(Position);
 
                 // no parent so WorldTransform and LocalTransform are equivalent.
                 WorldTransform = LocalTransform;
