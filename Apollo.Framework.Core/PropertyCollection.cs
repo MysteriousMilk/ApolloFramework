@@ -11,7 +11,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     /// <summary>
     /// A collection of user-defined propertie/data.

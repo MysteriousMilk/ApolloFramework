@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Apollo.Core.Nodes
+namespace Apollo.Framework.Core.Nodes
 {
     /// <summary>
     /// The base class for all game objects in the Apollo Framework.

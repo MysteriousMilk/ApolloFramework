@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     public static class Utilities
     {

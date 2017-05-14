@@ -11,7 +11,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     /// <summary>
     /// A 2D camera implementation.
