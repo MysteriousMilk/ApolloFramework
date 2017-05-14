@@ -13,7 +13,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     // https://en.wikipedia.org/wiki/Matrix_(mathematics)
     // "Immersive Linear Algebra"; Jacob Ström, Kalle Åström & Tomas Akenine-Möller; 2015-2016. Chapter 6: The Matrix. http://immersivemath.com/ila/ch06_matrices/ch06.html

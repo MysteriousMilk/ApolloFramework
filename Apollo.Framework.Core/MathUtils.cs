@@ -8,7 +8,7 @@
 // in the LICENSE file, distributed as part of this source code package.
 // ******************************************************************
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     public static class MathUtils
     {
