@@ -62,9 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Apollo.Core\Apollo.Core.csproj">
+    <ProjectReference Include="..\..\Apollo.Framework.Core\Apollo.Framework.Core.csproj">
       <Project>{04ac2e24-f8e7-4f50-b6da-9afc3651b9e3}</Project>
-      <Name>Apollo.Core</Name>
+      <Name>Apollo.Framework.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

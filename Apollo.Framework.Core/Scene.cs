@@ -8,7 +8,7 @@
 // in the LICENSE file, distributed as part of this source code package.
 // ******************************************************************
 
-using Apollo.Core.Nodes;
+using Apollo.Framework.Core.Nodes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace Apollo.Core
+namespace Apollo.Framework.Core
 {
     public class Scene : IScene
     {

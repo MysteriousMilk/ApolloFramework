@@ -1,5 +1,5 @@
-﻿using Apollo.Core;
-using Apollo.Core.Nodes;
+﻿using Apollo.Framework.Core;
+using Apollo.Framework.Core.Nodes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

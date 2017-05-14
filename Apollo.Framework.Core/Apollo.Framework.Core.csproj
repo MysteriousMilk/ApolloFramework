@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{04AC2E24-F8E7-4F50-B6DA-9AFC3651B9E3}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Apollo.Core</RootNamespace>
-    <AssemblyName>Apollo.Core</AssemblyName>
+    <RootNamespace>Apollo.Framework.Core</RootNamespace>
+    <AssemblyName>Apollo.Framework.Core</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
