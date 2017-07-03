@@ -66,6 +66,10 @@
       <Project>{04ac2e24-f8e7-4f50-b6da-9afc3651b9e3}</Project>
       <Name>Apollo.Framework.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Apollo.Framework.WindowsGamePlatform\Apollo.Framework.WindowsGamePlatform.csproj">
+      <Project>{8e8ff775-33cd-4b23-a932-767ceebd4546}</Project>
+      <Name>Apollo.Framework.WindowsGamePlatform</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

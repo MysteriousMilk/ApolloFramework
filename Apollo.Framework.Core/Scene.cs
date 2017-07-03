@@ -147,56 +147,6 @@ namespace Apollo.Framework.Core
             Camera.Update(gameTime);
         }
 
-        /// <summary>
-        /// This method is called every cycle to draw the <see cref="Scene"/> to the screen.
-        /// </summary>
-        /// <param name="gameTime">The current game time.</param>
-        public void Draw(GameTime gameTime)
-        {
-            // make sure we have a camera
-            if (Camera == null)
-                throw new NullReferenceException("Scene camera must be set before calling Draw().");
-
-            // Gets the scene graph in list for so we can iterate over it and do the draw calls.
-            // This is done with linear list so that the sprite batch can be started and stopped
-            // based on the node's blend mode.
-            List<INode> drawList = GetNodeList(Root);
-
-            // begin the sprite batch with deferred rendering, default blend state, using the camera's transform view matrix
-            _spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, Camera.ViewTransform);
-
-            // Draw each node.
-            foreach (INode n in drawList)
-            {
-                BlendState currBlendState = _spriteBatch.GraphicsDevice.BlendState;
-
-                // change the blend state if necessary
-                if (n.BlendState != currBlendState)
-                {
-                    _spriteBatch.End();
-
-                    _spriteBatch.Begin(SpriteSortMode.Deferred, n.BlendState, null, null, null, null, Camera.ViewTransform);
-                    n.Draw(_spriteBatch);
-                }
-                else
-                    n.Draw(_spriteBatch);
-            }
-
-            _spriteBatch.End();
-        }
-
-        private List<INode> GetNodeList(INode node)
-        {
-            List<INode> nodeList = new List<INode>();
-
-            foreach (INode child in node.Children)
-                nodeList.AddRange(GetNodeList(child));
-
-            nodeList.Add(node);
-
-            return nodeList;
-        }
-
         private void AddNodeToLookup(INode node)
         {
             foreach (INode child in node.Children)
@@ -211,9 +161,13 @@ namespace Apollo.Framework.Core
                 _NodeIdLookup.Add(node.Id, node);
 
                 if (_NodeTagLookup.ContainsKey(node.Tag))
+                {
                     Debug.WriteLine("Node with identical tag already exists in lookup table and will not be added twice.");
+                }
                 else
+                {
                     _NodeTagLookup.Add(node.Tag, node);
+                }
             }
         }
 

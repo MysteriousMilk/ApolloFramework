@@ -16,12 +16,41 @@ namespace Apollo.Framework.Core.Nodes
     /// <summary>
     /// Represents a <see cref="INode"/> that has a texture/image applied to it.
     /// </summary>
-    public class Sprite : Node
+    public class Sprite : Node, IRenderable
     {
         /// <summary>
-        /// The texture to be applied to the <see cref="Sprite"/>.
+        /// The texture to be applied to the <see cref="IRenderable"/>.
         /// </summary>
         public Texture2D Texture
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The tint of the <see cref="IRenderable"/> object.
+        /// </summary>
+        public Color Tint
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// The source rectangle of the <see cref="IRenderable"/> object used for drawing.
+        /// </summary>
+        public Rectangle SourceRectangle
+        {
+            get
+            {
+                return Texture != null ? Texture.Bounds : Rectangle.Empty;
+            }
+        }
+
+        /// <summary>
+        /// The graphical <see cref="Microsoft.Xna.Framework.Graphics.BlendState"/> to apply to the node and it's children.
+        /// </summary>
+        public BlendState BlendState
         {
             get;
             set;
@@ -30,28 +59,9 @@ namespace Apollo.Framework.Core.Nodes
         public Sprite(Texture2D texture)
         {
             Texture = texture;
+            Tint = Color.White;
+            BlendState = BlendState.AlphaBlend;
             Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
-        }
-
-        /// <summary>
-        /// This method is called every cycle to draw the <see cref="Sprite"/> to the screen.
-        /// </summary>
-        /// <param name="spriteBatch">The <see cref="SpriteBatch"/> used for drawing.</param>
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-                Texture,
-                WorldTransform.Translation,
-                Texture.Bounds,
-                Color.White,
-                WorldTransform.Rotation,
-                Origin,
-                WorldTransform.Scale,
-                SpriteEffects.None,
-                0
-                );
-
-            base.Draw(spriteBatch);
         }
     }
 }

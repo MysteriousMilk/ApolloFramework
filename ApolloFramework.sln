@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example1-SceneGraph", "Exam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Framework.Core", "Apollo.Framework.Core\Apollo.Framework.Core.csproj", "{04AC2E24-F8E7-4F50-B6DA-9AFC3651B9E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Framework.WindowsGamePlatform", "Apollo.Framework.WindowsGamePlatform\Apollo.Framework.WindowsGamePlatform.csproj", "{8E8FF775-33CD-4B23-A932-767CEEBD4546}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,14 @@ Global
 		{04AC2E24-F8E7-4F50-B6DA-9AFC3651B9E3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04AC2E24-F8E7-4F50-B6DA-9AFC3651B9E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{04AC2E24-F8E7-4F50-B6DA-9AFC3651B9E3}.Release|x86.Build.0 = Release|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Debug|x86.Build.0 = Debug|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Release|x86.ActiveCfg = Release|Any CPU
+		{8E8FF775-33CD-4B23-A932-767CEEBD4546}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
