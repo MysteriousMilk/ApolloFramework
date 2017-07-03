@@ -22,6 +22,9 @@ namespace Apollo.Framework.Core.Nodes
     public class Node : INode
     {
         private List<INode> _children;
+        private Vector2 _position;
+        private Vector2 _scale;
+        private float _rotation;
         private int _zorder;
 
         /// <summary>
@@ -65,8 +68,15 @@ namespace Apollo.Framework.Core.Nodes
         /// </summary>
         public Vector2 Position
         {
-            get;
-            set;
+            get { return _position; }
+            set
+            {
+                if (value != _position)
+                {
+                    _position = value;
+                    IsDirty = true;
+                }
+            }
         }
 
         /// <summary>
@@ -85,8 +95,15 @@ namespace Apollo.Framework.Core.Nodes
         /// </summary>
         public Vector2 Scale
         {
-            get;
-            set;
+            get { return _scale; }
+            set
+            {
+                if (value != _scale)
+                {
+                    _scale = value;
+                    IsDirty = true;
+                }
+            }
         }
 
         /// <summary>
@@ -94,8 +111,15 @@ namespace Apollo.Framework.Core.Nodes
         /// </summary>
         public float Rotation
         {
-            get;
-            set;
+            get { return _rotation; }
+            set
+            {
+                if (value != _rotation)
+                {
+                    _rotation = value;
+                    IsDirty = true;
+                }
+            }
         }
 
         /// <summary>
@@ -135,16 +159,7 @@ namespace Apollo.Framework.Core.Nodes
         {
             get;
             internal set;
-        }
-
-        /// <summary>
-        /// The graphical <see cref="Microsoft.Xna.Framework.Graphics.BlendState"/> to apply to the node and it's children.
-        /// </summary>
-        public BlendState BlendState
-        {
-            get;
-            set;
-        }
+        }  
 
         /// <summary>
         /// The parent <see cref="INode"/>.
@@ -176,6 +191,15 @@ namespace Apollo.Framework.Core.Nodes
             internal set;
         }
 
+        /// <summary>
+        /// Indicates if the transformations are up to date or not.
+        /// </summary>
+        public bool IsDirty
+        {
+            get;
+            internal set;
+        }
+
         public Node()
         {
             Id = Guid.NewGuid();
@@ -191,7 +215,6 @@ namespace Apollo.Framework.Core.Nodes
 
             LocalTransform = Matrix2.Identity;
             WorldTransform = Matrix2.Identity;
-            BlendState = BlendState.AlphaBlend;
 
             Parent = null;
         }
@@ -260,44 +283,37 @@ namespace Apollo.Framework.Core.Nodes
         /// <param name="gameTime">The current game time.</param>
         public virtual void Update(GameTime gameTime)
         {
-            // compute world transform for this node
-            if (Parent != null)
-            {
-                // compute local transform for this node
-                LocalTransform = Matrix2.CreateTranslation(-Parent.Position) *
-                                 Matrix2.CreateScale(Scale) *
-                                 Matrix2.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
-                                 Matrix2.CreateTranslation(Parent.Position) *
-                                 Matrix2.CreateTranslation(Position);
+            bool isDirtyThisFrame = IsDirty;
 
-                // compute world transform
-                WorldTransform = Parent.WorldTransform * LocalTransform;
-            }
-            else
+            if (IsDirty)
             {
                 // compute local transform
                 LocalTransform = Matrix2.CreateScale(Scale) *
-                                 Matrix2.CreateRotationZ(MathHelper.ToRadians(-Rotation)) *
+                                 Matrix2.CreateRotationZ(MathHelper.ToRadians(Rotation)) *
                                  Matrix2.CreateTranslation(Position);
 
-                // no parent so WorldTransform and LocalTransform are equivalent.
-                WorldTransform = LocalTransform;
+                // compute world transform for this node
+                if (Parent != null)
+                {
+                    // compute world transform
+                    WorldTransform = LocalTransform * Parent.WorldTransform;
+                }
+                else
+                {
+                    // no parent so WorldTransform and LocalTransform are equivalent.
+                    WorldTransform = LocalTransform;
+                }
+
+                IsDirty = false;
             }
 
             // update children
             foreach (Node child in Children)
+            {
+                if (isDirtyThisFrame)
+                    child.IsDirty = true;
                 child.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This method is called every cycle to draw the <see cref="Node"/> to the screen.
-        /// </summary>
-        /// <param name="spriteBatch">The <see cref="SpriteBatch"/> used for drawing.</param>
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            // draw each child
-            foreach (Node child in Children)
-                child.Draw(spriteBatch);
+            }
         }
 
         /// <summary>

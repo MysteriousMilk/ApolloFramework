@@ -1,8 +1,11 @@
 ﻿using Apollo.Framework.Core;
 using Apollo.Framework.Core.Nodes;
+using Apollo.Framework.Platforms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.IO;
 
 namespace Apollo.Examples
 {
@@ -22,6 +25,8 @@ namespace Apollo.Examples
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            SubSystem.RegisterGame(new WindowsGamePlatform(this));
         }
 
         /// <summary>
@@ -32,14 +37,15 @@ namespace Apollo.Examples
         /// </summary>
         protected override void Initialize()
         {
-            _graphics.PreferredBackBufferWidth = 1280;
-            _graphics.PreferredBackBufferHeight = 720;
-            _graphics.ApplyChanges();
+            SubSystem.Instance.Services.GetInstance<ILogger>().AddOutputChannel(Console.Out);
+            SubSystem.Instance.Services.Register<IRenderSystem>(new SceneGraphRenderSystem(GraphicsDevice));
 
             _camera = new Camera(GraphicsDevice.Viewport);
 
-            _scene = new Scene(GraphicsDevice);
-            _scene.Camera = _camera;
+            _scene = new Scene(GraphicsDevice)
+            {
+                Camera = _camera
+            };
 
             base.Initialize();
         }
@@ -50,19 +56,25 @@ namespace Apollo.Examples
         /// </summary>
         protected override void LoadContent()
         {
-            _moonSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\moon.png", GraphicsDevice));
-            _moonSprite.Position = new Vector2(100.0f, 0.0f);
-            _moonSprite.Scale = new Vector2(1.25f);
-            _moonSprite.Name = "Moon";
+            _moonSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\moon.png", GraphicsDevice))
+            {
+                Position = new Vector2(150.0f, 0.0f),
+                Scale = new Vector2(1.25f),
+                Name = "Moon"
+            };
 
-            _earthSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\exoplanet.png", GraphicsDevice));
-            _earthSprite.Position = new Vector2(400.0f, 0.0f);
-            _earthSprite.Scale = new Vector2(0.5f);
-            _earthSprite.Name = "Earth";
+            _earthSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\exoplanet.png", GraphicsDevice))
+            {
+                Position = new Vector2(400.0f, 0.0f),
+                Scale = new Vector2(0.5f),
+                Name = "Earth"
+            };
             _earthSprite.Add(_moonSprite);
 
-            _sunSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\sun.png", GraphicsDevice));
-            _sunSprite.Name = "Sun";
+            _sunSprite = new Sprite(Utilities.FromFile<Texture2D>(@"Data\Example1\sun.png", GraphicsDevice))
+            {
+                Name = "Sun",
+            };
             _sunSprite.Add(_earthSprite);
 
             _scene.AddNode(_sunSprite);
@@ -70,6 +82,8 @@ namespace Apollo.Examples
             _camera.Position = new Vector2(800, 0);
             _camera.Focus = _sunSprite;
             _camera.MoveSpeed = 0.5f;
+
+            (SubSystem.Instance.Services.GetInstance<IRenderSystem>() as SceneGraphRenderSystem).CurrentScene = _scene;
         }
 
         /// <summary>
@@ -91,17 +105,17 @@ namespace Apollo.Examples
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _sunSprite.Rotation += 0.1f;
+            _sunSprite.Rotation += 30.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (_sunSprite.Rotation > 359.0f)
                 _sunSprite.Rotation -= 360.0f;
 
-            _earthSprite.Rotation += 0.5f;
+            _earthSprite.Rotation += 60.0f * (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (_earthSprite.Rotation > 359.0f)
                 _earthSprite.Rotation -= 360.0f;
 
-            _moonSprite.Rotation += 5.0f;
-            if (_moonSprite.Rotation > 359.0f)
-                _moonSprite.Rotation -= 360.0f;
+            //_moonSprite.Rotation += 5.0f;
+            //if (_moonSprite.Rotation > 359.0f)
+            //    _moonSprite.Rotation -= 360.0f;
 
             _scene.Update(gameTime);
 
@@ -115,8 +129,6 @@ namespace Apollo.Examples
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            _scene.Draw(gameTime);
 
             base.Draw(gameTime);
         }

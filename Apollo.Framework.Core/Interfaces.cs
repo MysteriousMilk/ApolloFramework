@@ -12,9 +12,44 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Apollo.Framework.Core
 {
+    #region Interfaces
+    public interface IRenderable
+    {
+        /// <summary>
+        /// The origin point of the <see cref="IRenderable"/>.
+        /// </summary>
+        Vector2 Origin { get; set; }
+
+        /// <summary>
+        /// The transform matrix of the <see cref="IRenderable"/> in world space.
+        /// </summary>
+        Matrix2 WorldTransform { get; }
+
+        /// <summary>
+        /// The texture to be applied to the <see cref="IRenderable"/>.
+        /// </summary>
+        Texture2D Texture { get; set; }
+
+        /// <summary>
+        /// The source rectangle of the <see cref="IRenderable"/> object used for drawing.
+        /// </summary>
+        Rectangle SourceRectangle { get; }
+
+        /// <summary>
+        /// The tint of the <see cref="IRenderable"/> object.
+        /// </summary>
+        Color Tint { get; set; }
+
+        /// <summary>
+        /// The graphical <see cref="Microsoft.Xna.Framework.Graphics.BlendState"/> to apply to the <see cref="IRenderable"/>.
+        /// </summary>
+        BlendState BlendState { get; set; }
+    }
+
     public interface INode
     {
         /// <summary>
@@ -45,7 +80,7 @@ namespace Apollo.Framework.Core
         /// <summary>
         /// Absolute position of the <see cref="Node"/> within the game world.
         /// </summary>
-         Vector2 PositionAbs { get; }
+        Vector2 PositionAbs { get; }
 
         /// <summary>
         /// The scale factor to be applied to the <see cref="INode"/>.
@@ -69,11 +104,6 @@ namespace Apollo.Framework.Core
         /// The transform matrix of the <see cref="INode"/> in world space.
         /// </summary>
         Matrix2 WorldTransform { get; }
-
-        /// <summary>
-        /// The graphical <see cref="Microsoft.Xna.Framework.Graphics.BlendState"/> to apply to the node and it's children.
-        /// </summary>
-        BlendState BlendState { get; set; }
 
         /// <summary>
         /// The parent <see cref="INode"/>.
@@ -129,12 +159,6 @@ namespace Apollo.Framework.Core
         void Update(GameTime gameTime);
 
         /// <summary>
-        /// This method is called every cycle to draw the <see cref="INode"/> to the screen.
-        /// </summary>
-        /// <param name="spriteBatch">The <see cref="SpriteBatch"/> used for drawing.</param>
-        void Draw(SpriteBatch spriteBatch);
-
-        /// <summary>
         /// Creates a new copy of the <see cref="INode"/> and all of its children.
         /// </summary>
         /// <returns></returns>
@@ -187,11 +211,168 @@ namespace Apollo.Framework.Core
         /// </summary>
         /// <param name="gameTime">The current game time.</param>
         void Update(GameTime gameTime);
+    }
+
+    public interface IGamePlatform
+    {
+        /// <summary>
+        /// Flag to indicate if the game is a debug assembly or not.
+        /// </summary>
+        bool IsDebug { get; }
 
         /// <summary>
-        /// This method is called every cycle to draw the <see cref="Scene"/> to the screen.
+        /// Path to the settings directory.
         /// </summary>
-        /// <param name="gameTime">The current game time.</param>
-        void Draw(GameTime gameTime);
+        string SettingsDirectory { get; set; }
+
+        /// <summary>
+        /// Path to the log directory.
+        /// </summary>
+        string LogDirectory { get; set; }
+
+        /// <summary>
+        /// The name of the settings file.
+        /// </summary>
+        string SettingsFileName { get; set; }
+
+        /// <summary>
+        /// This is the main game class for the game.
+        /// </summary>
+        Game Game { get; }
+
+        /// <summary>
+        /// Opens a file <see cref="Stream"/>. for the given file path.
+        /// </summary>
+        /// <param name="path">The path to the file to open the <see cref="Stream"/>.</param>
+        /// <returns>A <see cref="Stream"/> to read the file contents from.</returns>
+        /// <remarks>
+        /// This method will just return a stream.  The stream will still need to be closed/disposed
+        /// when it is done being used.
+        /// </remarks>
+        Stream OpenReadStream(string path);
+
+        /// <summary>
+        /// Creates a file <see cref="Stream"/>. for the given file path.
+        /// </summary>
+        /// <param name="path">The path to the file to open/create the <see cref="Stream"/>.</param>
+        /// <returns>A <see cref="Stream"/> to write the data contents to.</returns>
+        /// <remarks>
+        /// This method will just return a stream.  The stream will still need to be closed/disposed
+        /// when it is done being used.
+        /// </remarks>
+        Stream OpenWriteStream(string path);
+
+        /// <summary>
+        /// Checks to see if a file exists on the file system for the
+        /// <see cref="IGamePlatform"/>.
+        /// </summary>
+        /// <param name="filename">The full path of the file.</param>
+        /// <returns>True if the file exists and False if it does not.</returns>
+        bool DoesFileExist(string filename);
+
+        /// <summary>
+        /// Writes all the given text to a file.
+        /// </summary>
+        /// <param name="directory">Path of the directory to store the file in.</param>
+        /// <param name="filename">Name of the file to write.</param>
+        /// <param name="text">Text to write to the file.</param>
+        void WriteToFile(string directory, string filename, string text);
     }
+
+    public interface IServiceLocator
+    {
+        /// <summary>
+        /// Registers a new service with the service locator.
+        /// </summary>
+        /// <typeparam name="T">The type of service.</typeparam>
+        /// <param name="service">The instance of the service.</param>
+        void Register<T>(T service);
+
+        /// <summary>
+        /// Gets an instances of a service from the service locator.
+        /// </summary>
+        /// <typeparam name="T">The type of service.</typeparam>
+        /// <returns>The instance of the service.</returns>
+        /// <remarks>
+        /// If the service is not found in the service locator, null
+        /// will be returned.
+        /// </remarks>
+        T GetInstance<T>();
+
+        /// <summary>
+        /// Checks to see if an instance of the specified type exists
+        /// in the service locator.
+        /// </summary>
+        /// <typeparam name="T">The type of service.</typeparam>
+        /// <returns>True if the instance exists and False if it does not.</returns>
+        bool HasInstance<T>();
+    }
+
+    public interface IRenderSystem
+    {
+        /// <summary>
+        /// The game's current <see cref="Microsoft.Xna.Framework.Graphics.GraphicsDevice"/>.
+        /// </summary>
+        GraphicsDevice GraphicsDevice { get; }
+
+        /// <summary>
+        /// The <see cref="Microsoft.Xna.Framework.Graphics.SpriteBatch"/> used for drawing
+        /// <see cref="IRenderable"/> objects to the screen.
+        /// </summary>
+        SpriteBatch SpriteBatch { get; }
+
+        /// <summary>
+        /// Color to clear the screen with before each draw cycle.
+        /// </summary>
+        Color ClearColor { get; set; }
+
+        /// <summary>
+        /// Actions to be performed before the current draw cycle.
+        /// </summary>
+        void PreProcess();
+
+        /// <summary>
+        /// Draws objects to the screen.
+        /// </summary>
+        void Render();
+
+        /// <summary>
+        /// Actions to be performed after the current draw cycle.
+        /// </summary>
+        void PostProcess();
+    }
+
+    public interface ILogger
+    {
+        /// <summary>
+        /// Adds an output channel to the logger.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to output the log to.</param>
+        void AddOutputChannel(Stream stream);
+
+        /// <summary>
+        /// Adds an output channel to the logger.
+        /// </summary>
+        /// <param name="writer">The <see cref="TextWriter"/> to output the log to.</param>
+        void AddOutputChannel(TextWriter writer);
+
+        /// <summary>
+        /// Writes a new entry to the log.
+        /// </summary>
+        /// <param name="type">Specifies the <see cref="LogEntryType"/>.</param>
+        /// <param name="message">The message to write.</param>
+        void WriteLine(LogEntryType type, string message);
+    }
+    #endregion
+
+    #region Enumerations
+    public enum LogEntryType
+    {
+        Info,
+        Debug,
+        Trace,
+        Warning,
+        Error
+    }
+    #endregion
 }
